@@ -3,7 +3,6 @@
 //
 
 #include "Environnement.h"
-#include <unistd.h>
 
 Environnement::Environnement(): m_carte(Carte(5, 5)){
     m_carte = Carte(5,5);
@@ -39,26 +38,4 @@ bool Environnement::shouldThereBeANewLostLewel() const {
         return true;
     }
     return false;
-}
-
-int main() {
-    Environnement environnement = Environnement();
-    Carte& carte = environnement.getCarte();
-    while(environnement.gameIsRunning()){
-        cout << "Nouveau calcul : " << endl;
-
-        if (environnement.shouldThereBeANewDirtySpace()){
-            carte.generateDirty();
-        }
-        if(environnement.shouldThereBeANewLostLewel()){
-            carte.generateJewel();
-        }
-        cout << carte << endl;
-        sleep(1);
-
-
-
-    }
-
-    return 0;
 }

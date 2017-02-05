@@ -13,27 +13,26 @@ using namespace std;
 
 class Case {
     public :
-        Case(int x, int y);
+    Case(int x, int y);
 
     ~Case();
 
-        Poussiere& getDirt();
-        bool getJewel() const;
-        void setJewel(bool jewel);
+    bool getDirt();
+    bool getJewel() const;
+    void setJewel(bool jewel);
+    void soil (){m_dirt = true;}
 
-        friend ostream& operator<<(ostream& os, Case& c);
-
-
+    friend ostream& operator<<(ostream& os, Case& c);
 private :
         int m_x;
         int m_y;
-        Poussiere m_dirt;
+        bool m_dirt;
         bool m_jewel;
 };
 
 inline ostream &operator<<( ostream &out, Case &c )
 {
-    out<< "P : " << c.getDirt().getQuantity() << ", B : " << c.getJewel();
+    out<< "P : " << c.getDirt() << ", B : " << c.getJewel();
     return out;
 }
 

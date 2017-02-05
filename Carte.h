@@ -9,6 +9,7 @@
 #include "iostream"
 #include "vector"
 #include "exception"
+#include <random>
 
 using namespace std;
 class Carte {
@@ -30,13 +31,11 @@ class Carte {
         friend ostream& operator<<(ostream& os, Carte& c);
 
 
-private:
+    private:
         int m_sizeX;
         int m_sizeY;
         vector<Case> m_cases;
-
-
-
+        std::mt19937_64 randomGenerator;
 };
 
 inline ostream &operator<<( ostream &out, Carte &c )

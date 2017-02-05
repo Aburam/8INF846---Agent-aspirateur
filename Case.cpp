@@ -7,7 +7,7 @@
 Case::Case(int x, int y) {
     m_x = x;
     m_y = y;
-    m_dirt =Poussiere();
+    m_dirt = false;
     m_jewel = false;
 }
 
@@ -15,7 +15,7 @@ Case::~Case() {
 
 }
 
-Poussiere& Case::getDirt() {
+bool Case::getDirt() {
     return m_dirt;
 }
 

@@ -43,13 +43,13 @@ Case& Carte::getCase(int position) {
 }
 
 void Carte::generateDirty() {
-    int randomPosition = rand() % (int)(m_cases.size());
-    m_cases.at(randomPosition).getDirt().addQuantity();
+    int randomPosition = randomGenerator() % (int)(m_cases.size());
+    m_cases.at(randomPosition).soil();
 }
 
 
 void Carte::generateJewel() {
-    int randomPosition = rand() % (int) (m_cases.size());
+    int randomPosition = randomGenerator() % (int)(m_cases.size());
     m_cases.at(randomPosition).setJewel(true);
 
 }

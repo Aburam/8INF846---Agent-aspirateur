@@ -18,12 +18,14 @@ class Carte {
 
         ~Carte();
 
-        int getSize();
-        int getSizeX();
-        int getSizeY();
+        int getSize() const;
+        int getSizeX() const;
+        int getSizeY() const;
 
         vector<Case>& getCases();
         Case& getCase(int position);
+        int findIndex(Case& searchCase ) const;
+
 
         void generateDirty();
         void generateJewel();

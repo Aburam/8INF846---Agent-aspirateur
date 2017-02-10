@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Environnement.h"
+#include "Agent.h"
 #include <unistd.h>
 
 

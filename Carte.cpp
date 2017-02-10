@@ -18,15 +18,15 @@ Carte::~Carte() {
 
 }
 
-int Carte::getSize() {
+int Carte::getSize() const{
     return m_sizeX*m_sizeY;
 }
 
-int Carte::getSizeX() {
+int Carte::getSizeX() const{
     return m_sizeX;
 }
 
-int Carte::getSizeY() {
+int Carte::getSizeY() const{
     return m_sizeY;
 }
 
@@ -34,7 +34,7 @@ vector<Case>& Carte::getCases(){
     return m_cases;
 }
 
-Case& Carte::getCase(int position) {
+Case& Carte::getCase(int position){
     if(position < m_cases.size()){
         return m_cases.at(position);
     }
@@ -52,4 +52,13 @@ void Carte::generateJewel() {
     int randomPosition = randomGenerator() % (int)(m_cases.size());
     m_cases.at(randomPosition).setJewel(true);
 
+}
+
+int Carte::findIndex(Case &searchCase) const {
+    for( int i = 0; i < m_cases.size(); i++ ) {
+        if(m_cases[i] == searchCase) {
+            return i;
+        }
+    }
+    return -1;
 }

@@ -32,31 +32,79 @@ void Agent::addScore() {
     ++m_score;
 }
 
+void Agent::explore() {
+
+    vector<Case> totalPath;
+    vector<Case> casesNotEmpty = m_map.getCasesNotEmpty();
+    Case currentPosition = m_position;
+
+    while(!casesNotEmpty.empty()) {
+
+        //Find the nearest case not empty
+        Case nearestCase = currentPosition;
+        int minDistance = INT_MAX;
+        int position = -1; //used to erase case after finding the path
+        int cmp = 0;
+
+        for(Case &currentCase : casesNotEmpty) {
+            int distance = currentPosition.getDistance(currentCase);
+            if(distance < minDistance) {
+                minDistance = distance;
+                nearestCase = currentCase;
+                position = cmp;
+            }
+            cmp++;
+        }
+
+        //Compute path between agent and nearest "not empty case"
+        vector<Case> path = aStar(currentPosition, nearestCase);
+
+        //Add the path to the total path
+        totalPath.insert(totalPath.end(), path.begin(), path.end());
+
+        //Erase the current case
+        casesNotEmpty.erase(casesNotEmpty.begin() + position);
+
+        currentPosition = nearestCase;
+
+    }
+
+    m_path = totalPath;
+}
+
 vector<Case> Agent::reconstructPath(std::map<Case, Case> cameFrom, Case current) {
     vector<Case> totalPath;
+
     totalPath.push_back(current);
 
     while(cameFrom.find(current) != cameFrom.end()) {
         current = cameFrom.find(current)->second;
-        totalPath.push_back(current);
+
+        // we don't add the position of current agent unless there are dirt or jewel
+        if(m_position != current || current.getDirt() || current.getJewel()) {
+            totalPath.insert(totalPath.begin(), current);
+        }
+
+
     }
 
     return totalPath;
 }
 
-vector<Case> Agent::aStar(Case goal) {
+//A* between agent position and a goal case
+vector<Case> Agent::aStar(Case position, Case goal) {
     set<Case> closedSet;
     set<Case> openSet;
-    openSet.insert(m_position);
+    openSet.insert(position);
 
     map<Case, Case> cameFrom;
 
     map<Case, int> gScore;
-    std::pair<Case, int> firstGScorePair = make_pair(m_position, 0);
+    std::pair<Case, int> firstGScorePair = make_pair(position, 0);
     gScore.insert(firstGScorePair);
 
     map<Case, int> fScore;
-    std::pair<Case, int> firstFScorePair = make_pair(m_position, m_position.heuristicCostEstimate(goal));
+    std::pair<Case, int> firstFScorePair = make_pair(position, position.heuristicCostEstimate(goal));
     fScore.insert(firstGScorePair);
 
     while(!openSet.empty()) {
@@ -121,7 +169,36 @@ vector<Case> Agent::aStar(Case goal) {
             }
         }
     }
+    throw logic_error("Error in A* search");
 }
+
+void Agent::move() {
+    Case &nextPosition = *m_path.begin();
+
+    if(nextPosition == m_position) {
+        // If next move is the same than agent position's, there is an action to do
+        if(nextPosition.getJewel()) {
+            //TODO: we take a jewel, save it in the score
+            nextPosition.takeJewel();
+        } else {
+            //TODO: we clean dirt, save it in the score
+            nextPosition.cleanDirt();
+        }
+
+        //There is no jewel and no dirt, we can leave this case
+        if(nextPosition.getDirt() == false && nextPosition.getJewel() == false) {
+            m_path.erase(m_path.begin());
+        }
+
+    } else {
+        m_map.moveAgent(m_position, nextPosition);
+        m_path.erase(m_path.begin());
+    }
+
+
+
+}
+
 
 
 

@@ -9,9 +9,7 @@ int main() {
     Carte& carte = environnement.getCarte();
 
     // TEST de l'algo d'exploration A*
-    //Agent agent = Agent(carte);
-    //Case goal = carte.getCase(9);
-    //agent.aStar(goal);
+    Agent agent = Agent(carte);
 
     while(environnement.gameIsRunning()){
         cout << "Nouveau calcul : " << endl;
@@ -23,7 +21,14 @@ int main() {
             carte.generateJewel();
         }
         cout << carte << endl;
+
+
+        // Find path to collect all jewel and clean all dirt
+        agent.explore();
+        agent.move();
+
         sleep(1);
+
 
     }
     return 0;

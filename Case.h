@@ -28,12 +28,16 @@ class Case {
     int getPositionX() const;
     int getPositionY() const;
     int heuristicCostEstimate(Case goal) const;
+    int getDistance(Case goal) const;
+    void takeJewel();
+    void cleanDirt();
 
 
 
 
     friend ostream& operator<<(ostream& os, Case& c);
     friend bool operator==( const Case& lhs, const Case& rhs );
+    friend bool operator!=( const Case& lhs, const Case& rhs );
     friend bool operator<( const Case& lhs, const Case& rhs );
 
 private :
@@ -57,6 +61,11 @@ inline bool operator==( const Case& lhs, const Case& rhs )
 if (lhs.getPositionX() == rhs.getPositionX() && lhs.getPositionY() == rhs.getPositionY() && lhs.getDirt() == rhs.getDirt() && lhs.getJewel() == rhs.getJewel())
     return true;
 return false;
+}
+
+inline bool operator!=( const Case& lhs, const Case& rhs )
+{
+    return !(lhs==rhs);
 }
 
 // This operator is used by the function find() of map

@@ -42,8 +42,20 @@ int Case::getPositionY() const {
 
 // Heuristic cost estimation used by A* search
 int Case::heuristicCostEstimate(Case goal) const {
+    return getDistance(goal);
+}
+
+int Case::getDistance(Case goal) const {
     int diffX = abs(m_x - goal.m_x);
     int diffY = abs(m_y - goal.m_y);
 
     return diffX + diffY;
+}
+
+void Case::takeJewel() {
+    m_jewel = false;
+}
+
+void Case::cleanDirt() {
+    m_dirt = false;
 }

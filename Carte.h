@@ -26,10 +26,12 @@ class Carte {
         Case& getCase(int position);
         int findIndex(Case& searchCase ) const;
         vector<Case> getNeighbors(Case searchCase);
+        vector<Case> getCasesNotEmpty();
 
 
         void generateDirty();
         void generateJewel();
+        void moveAgent(Case& lastPosition, Case& newPosition);
 
         friend ostream& operator<<(ostream& os, Carte& c);
 

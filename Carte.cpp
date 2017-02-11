@@ -54,6 +54,12 @@ void Carte::generateJewel() {
 
 }
 
+
+void Carte::moveAgent(Case &lastPosition, Case &newPosition) {
+    lastPosition.removeAgent();
+    newPosition.addAgent();
+}
+
 int Carte::findIndex(Case &searchCase) const {
     for( int i = 0; i < m_cases.size(); i++ ) {
         if(m_cases[i] == searchCase) {
@@ -82,10 +88,23 @@ vector<Case> Carte::getNeighbors(Case searchCase) {
         neighbors.push_back(upNeighbour);
     }
 
-    if(currentIndex<=m_sizeX*(m_sizeY-1)) {
+    if(currentIndex<m_sizeX*(m_sizeY-1)) {
         Case downNeighbour = m_cases.at(currentIndex + m_sizeX);
         neighbors.push_back(downNeighbour);
     }
 
     return neighbors;
 };
+
+vector<Case> Carte::getCasesNotEmpty() {
+
+    vector<Case> casesNotEmpty;
+
+    for(Case &currentCase : m_cases) {
+        if(currentCase.getDirt() || currentCase.getJewel()) {
+            casesNotEmpty.push_back(currentCase);
+        }
+    }
+
+    return casesNotEmpty;
+}

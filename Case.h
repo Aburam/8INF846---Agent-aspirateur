@@ -27,12 +27,15 @@ class Case {
     void removeAgent(){m_agent = false;}
     int getPositionX() const;
     int getPositionY() const;
+    int heuristicCostEstimate(Case goal) const;
 
 
 
 
     friend ostream& operator<<(ostream& os, Case& c);
     friend bool operator==( const Case& lhs, const Case& rhs );
+    friend bool operator<( const Case& lhs, const Case& rhs );
+
 private :
         int m_x;
         int m_y;
@@ -54,6 +57,19 @@ inline bool operator==( const Case& lhs, const Case& rhs )
 if (lhs.getPositionX() == rhs.getPositionX() && lhs.getPositionY() == rhs.getPositionY() && lhs.getDirt() == rhs.getDirt() && lhs.getJewel() == rhs.getJewel())
     return true;
 return false;
+}
+
+// This operator is used by the function find() of map
+inline bool operator<( const Case& lhs, const Case& rhs )
+{
+    if(lhs.m_x < rhs.m_x) {
+        return true;
+    } else {
+        if(lhs.m_x == rhs.m_x && lhs.m_y < rhs.m_y) {
+            return true;
+        }
+    }
+    return false;
 }
 
 

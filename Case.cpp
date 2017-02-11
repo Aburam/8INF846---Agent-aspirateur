@@ -39,3 +39,11 @@ int Case::getPositionX() const {
 int Case::getPositionY() const {
     return m_y;
 }
+
+// Heuristic cost estimation used by A* search
+int Case::heuristicCostEstimate(Case goal) const {
+    int diffX = abs(m_x - goal.m_x);
+    int diffY = abs(m_y - goal.m_y);
+
+    return diffX + diffY;
+}

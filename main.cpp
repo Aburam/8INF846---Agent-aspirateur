@@ -7,6 +7,12 @@
 int main() {
     Environnement environnement = Environnement();
     Carte& carte = environnement.getCarte();
+
+    // TEST de l'algo d'exploration A*
+    //Agent agent = Agent(carte);
+    //Case goal = carte.getCase(9);
+    //agent.aStar(goal);
+
     while(environnement.gameIsRunning()){
         cout << "Nouveau calcul : " << endl;
 
@@ -18,6 +24,7 @@ int main() {
         }
         cout << carte << endl;
         sleep(1);
+
     }
     return 0;
 }

@@ -6,6 +6,8 @@
 #define INC_8INF846_TP1_AGENT_H
 
 #include "Carte.h"
+#include <set>
+#include <map>
 
 class Agent {
     public :
@@ -19,8 +21,10 @@ class Agent {
 
         int getScore() const;
         void addScore();
+        vector<Case> aStar(Case goal);
+        vector<Case> reconstructPath(std::map<Case, Case> cameFrom, Case current);
 
-    private :
+private :
         Case& m_position;
         Carte& m_map;
         int m_score;

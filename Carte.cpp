@@ -36,7 +36,7 @@ vector<Case>& Carte::getCases(){
 
 Case& Carte::getCase(int position){
     if(position < m_cases.size()){
-        return m_cases.at(position);
+        return m_cases.at(position); ;
     }
     throw logic_error("La position demandee n'existe pas");
 
@@ -62,3 +62,30 @@ int Carte::findIndex(Case &searchCase) const {
     }
     return -1;
 }
+
+vector<Case> Carte::getNeighbors(Case searchCase) {
+
+    vector<Case> neighbors;
+
+    int currentIndex = findIndex(searchCase);
+
+    if(currentIndex%m_sizeX > 0) {
+        Case leftNeighbour = m_cases.at(currentIndex-1);
+        neighbors.push_back(leftNeighbour);
+    }
+    if(currentIndex%m_sizeX < m_sizeX -1) {
+        Case rightNeighbour = m_cases.at(currentIndex+1);
+        neighbors.push_back(rightNeighbour);
+    }
+    if(currentIndex>=m_sizeX) {
+        Case upNeighbour = m_cases.at(currentIndex - m_sizeX);
+        neighbors.push_back(upNeighbour);
+    }
+
+    if(currentIndex<=m_sizeX*(m_sizeY-1)) {
+        Case downNeighbour = m_cases.at(currentIndex + m_sizeX);
+        neighbors.push_back(downNeighbour);
+    }
+
+    return neighbors;
+};

@@ -72,7 +72,7 @@ void Agent::explore() {
     m_path = totalPath;
 }
 
-vector<Case> Agent::reconstructPath(std::map<Case, Case> cameFrom, Case current) {
+vector<Case> Agent::reconstructPath(std::map<Case, Case> cameFrom, Case& current) {
     vector<Case> totalPath;
 
     totalPath.push_back(current);
@@ -92,7 +92,7 @@ vector<Case> Agent::reconstructPath(std::map<Case, Case> cameFrom, Case current)
 }
 
 //A* between agent position and a goal case
-vector<Case> Agent::aStar(Case position, Case goal) {
+vector<Case> Agent::aStar(Case& position, Case& goal) {
     set<Case> closedSet;
     set<Case> openSet;
     openSet.insert(position);

@@ -21,8 +21,8 @@ class Agent {
 
         int getScore() const;
         void addScore();
-        vector<Case> aStar(Case position, Case goal);
-        vector<Case> reconstructPath(std::map<Case, Case> cameFrom, Case current);
+        vector<Case> aStar(Case& position, Case& goal);
+        vector<Case> reconstructPath(std::map<Case, Case> cameFrom, Case& current);
         void explore();
         void move();
 

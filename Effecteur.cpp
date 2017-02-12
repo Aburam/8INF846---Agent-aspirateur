@@ -11,6 +11,46 @@ Effecteur::~Effecteur() {
 
 }
 
+
+void Effecteur::move() {
+
+    vector<Case*> path = m_agent.getPath();
+    Case *nextPosition = *path.begin();
+
+    if(*nextPosition == m_agent.getCase()) {
+        // If next move is the same than agent position's, there is an action to do
+        if(nextPosition->getJewel()) {
+            //TODO: we take a jewel, save it in the score
+            getJewel();
+        } else {
+            //TODO: we clean dirt, save it in the score
+            aspirate();
+        }
+
+        //There is no jewel and no dirt, we can leave this case
+        if(nextPosition->getDirt() == false && nextPosition->getJewel() == false) {
+            path.erase(path.begin());
+        }
+
+    } else {
+        m_agent.getCase().removeAgent();
+        nextPosition->addAgent();
+        m_agent.setCase(*nextPosition);
+        path.erase(path.begin());
+    }
+
+}
+
+void Effecteur::goHere(Case* nextPosition) {
+    Case& casePosition = m_agent.getCase();
+    int position = m_agent.getMap().findIndex(casePosition);
+
+    casePosition.removeAgent();
+    m_agent.setCase(*nextPosition);
+    m_agent.getCase().addAgent();
+
+}
+
 void Effecteur::goLeft(){
     Case& casePosition = m_agent.getCase();
     int position = m_agent.getMap().findIndex(casePosition);

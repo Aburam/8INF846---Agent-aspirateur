@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Environnement.h"
 #include "Agent.h"
+#include "Effecteur.h"
 #include <unistd.h>
 
 
@@ -10,6 +11,7 @@ int main() {
 
     // TEST de l'algo d'exploration A*
     Agent agent = Agent(carte);
+    Effecteur effecteur = Effecteur(agent);
 
     while(environnement.gameIsRunning()){
         cout << "Nouveau calcul : " << endl;
@@ -25,7 +27,7 @@ int main() {
 
         // Find path to collect all jewel and clean all dirt
         agent.explore();
-        agent.move();
+        effecteur.move();
 
         sleep(1);
 

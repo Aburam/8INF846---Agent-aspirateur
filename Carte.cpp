@@ -69,40 +69,40 @@ int Carte::findIndex(Case &searchCase) const {
     return -1;
 }
 
-vector<Case> Carte::getNeighbors(Case searchCase) {
+vector<Case*> Carte::getNeighbors(Case &searchCase) {
 
-    vector<Case> neighbors;
+    vector<Case*> neighbors;
 
     int currentIndex = findIndex(searchCase);
 
     if(currentIndex%m_sizeX > 0) {
-        Case leftNeighbour = m_cases.at(currentIndex-1);
+        Case* leftNeighbour = &m_cases.at(currentIndex-1);
         neighbors.push_back(leftNeighbour);
     }
     if(currentIndex%m_sizeX < m_sizeX -1) {
-        Case rightNeighbour = m_cases.at(currentIndex+1);
+        Case* rightNeighbour = &m_cases.at(currentIndex+1);
         neighbors.push_back(rightNeighbour);
     }
     if(currentIndex>=m_sizeX) {
-        Case upNeighbour = m_cases.at(currentIndex - m_sizeX);
+        Case* upNeighbour = &m_cases.at(currentIndex - m_sizeX);
         neighbors.push_back(upNeighbour);
     }
 
     if(currentIndex<m_sizeX*(m_sizeY-1)) {
-        Case downNeighbour = m_cases.at(currentIndex + m_sizeX);
+        Case* downNeighbour = &m_cases.at(currentIndex + m_sizeX);
         neighbors.push_back(downNeighbour);
     }
 
     return neighbors;
 };
 
-vector<Case> Carte::getCasesNotEmpty() {
+vector<Case*> Carte::getCasesNotEmpty() {
 
-    vector<Case> casesNotEmpty;
+    vector<Case*> casesNotEmpty;
 
     for(Case &currentCase : m_cases) {
         if(currentCase.getDirt() || currentCase.getJewel()) {
-            casesNotEmpty.push_back(currentCase);
+            casesNotEmpty.push_back(&currentCase);
         }
     }
 

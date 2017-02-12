@@ -25,8 +25,8 @@ class Carte {
         vector<Case>& getCases();
         Case& getCase(int position);
         int findIndex(Case& searchCase ) const;
-        vector<Case> getNeighbors(Case searchCase);
-        vector<Case> getCasesNotEmpty();
+        vector<Case*> getNeighbors(Case& searchCase);
+        vector<Case*> getCasesNotEmpty();
 
 
         void generateDirty();

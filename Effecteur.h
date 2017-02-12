@@ -11,6 +11,8 @@ class Effecteur {
     public:
         Effecteur(Agent& agent);
         ~Effecteur();
+        void move();
+        void goHere(Case* position);
         void goLeft();
         void goRight();
         void goDown();

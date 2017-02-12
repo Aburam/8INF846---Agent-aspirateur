@@ -24,7 +24,9 @@ class Agent {
         vector<Case*> aStar(Case* position, Case* goal);
         vector<Case*> reconstructPath(std::map<Case, Case*> cameFrom, Case* current);
         void explore();
-        vector<Case*> getPath() const;
+        vector<Case*>& getPath();
+        void setMap(Carte newMap);
+        int getIndexPosition();
 
 private :
         Case* m_position;

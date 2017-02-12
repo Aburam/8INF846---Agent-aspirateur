@@ -16,6 +16,15 @@ Case::~Case() {
 
 }
 
+Case::Case(const Case &copyCase) {
+    //cout << "Case copy constructor" << endl;
+    m_x = copyCase.m_x;
+    m_y = copyCase.m_y;
+    m_dirt = copyCase.m_dirt;
+    m_jewel = copyCase.m_jewel;
+    m_agent = copyCase.m_agent;
+}
+
 bool Case::getDirt() const{
     return m_dirt;
 }
@@ -30,6 +39,10 @@ bool Case::getAgent() const {
 
 void Case::setJewel(bool jewel) {
     m_jewel = jewel;
+}
+
+void Case::setDirt(bool dirt) {
+    m_dirt = dirt;
 }
 
 int Case::getPositionX() const {

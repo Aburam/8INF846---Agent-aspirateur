@@ -6,10 +6,11 @@
 #define INC_8INF846_TP1_EFFECTEUR_H
 
 #include "Agent.h"
+#include "Environnement.h"
 
 class Effecteur {
     public:
-        Effecteur(Agent& agent);
+        Effecteur(Agent& agent, Environnement & environnement);
         ~Effecteur();
         void move();
         void goHere(Case* position);
@@ -23,6 +24,7 @@ class Effecteur {
 
 private:
         Agent & m_agent;
+        Environnement & m_environnement;
 
 
 

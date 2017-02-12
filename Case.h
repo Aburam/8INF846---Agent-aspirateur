@@ -14,13 +14,14 @@ using namespace std;
 class Case {
     public :
     Case(int x, int y);
-
+    Case(const Case &copyCase);
     ~Case();
 
     bool getDirt() const;
     bool getJewel() const;
     bool getAgent() const;
     void setJewel(bool jewel);
+    void setDirt(bool dirt);
     void soil (){m_dirt = true;}
     void clean (){m_dirt = false;}
     void addAgent(){m_agent = true;}

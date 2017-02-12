@@ -15,7 +15,7 @@ using namespace std;
 class Carte {
     public:
         Carte(int sizeX, int sizeY);
-
+        Carte(const Carte &carte);
         ~Carte();
 
         int getSize() const;
@@ -27,6 +27,7 @@ class Carte {
         int findIndex(Case& searchCase ) const;
         vector<Case*> getNeighbors(Case& searchCase);
         vector<Case*> getCasesNotEmpty();
+        int getIndexPosition(Case& position);
 
 
         void generateDirty();

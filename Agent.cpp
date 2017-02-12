@@ -32,6 +32,10 @@ void Agent::addScore() {
     ++m_score;
 }
 
+void Agent::setMap(Carte newMap) {
+    m_map = newMap;
+}
+
 void Agent::explore() {
 
     vector<Case*> totalPath;
@@ -185,10 +189,13 @@ vector<Case*> Agent::aStar(Case* position, Case* goal) {
     throw logic_error("Error in A* search");
 }
 
-vector<Case*> Agent::getPath() const {
+vector<Case*>& Agent::getPath() {
     return m_path;
 }
 
+int Agent::getIndexPosition() {
+    return m_map.findIndex(*m_position);
+}
 
 
 

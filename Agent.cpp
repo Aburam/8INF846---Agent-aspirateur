@@ -4,7 +4,7 @@
 
 #include "Agent.h"
 
-Agent::Agent(Carte& map) : m_map(map), m_position(&map.getCase(0)), m_score(0){
+Agent::Agent(Carte& map) : m_map(map), m_position(&map.getCase(0)), m_score(0), m_scoreBattery(25), m_positionBattery(&map.getCase(0)){
     m_position->addAgent();
 }
 
@@ -28,8 +28,24 @@ int Agent::getScore() const {
     return m_score;
 }
 
-void Agent::addScore() {
-    ++m_score;
+void Agent::addScore(int count) {
+    m_score += count;
+}
+
+void Agent::refillBattery() {
+    m_scoreBattery = 25;
+}
+
+Case& Agent::getCaseBattery(){
+    return *m_positionBattery;
+}
+
+void Agent::reduceBattery() {
+    --m_scoreBattery;
+}
+
+int Agent::getBattery() const {
+    return m_scoreBattery;
 }
 
 void Agent::setMap(Carte newMap) {
@@ -59,14 +75,28 @@ void Agent::explore() {
             }
             cmp++;
         }
+        vector<Case*> path;
 
-        //Compute path between agent and nearest "not empty case"
-        vector<Case*> path = aStar(currentPosition, nearestCase);
+        if(currentPosition->heuristicCostEstimate(*nearestCase)+ currentPosition->heuristicCostEstimate(*m_positionBattery)> m_scoreBattery-2 || currentPosition->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
+            // recalculate the path if we need to refill the battery
+            path = aStar(currentPosition, m_positionBattery);
+             vector<Case*> totalPath;
+             totalPath.insert(totalPath.end(), path.begin(), path.end());
+             m_path = totalPath;
+
+
+        }
+        else{
+            //Compute path between agent and nearest "not empty case"
+
+            path = aStar(currentPosition, nearestCase);
+        }
 
         //Add the path to the total path
         totalPath.insert(totalPath.end(), path.begin(), path.end());
 
         //Erase the current case
+
         casesNotEmpty.erase(casesNotEmpty.begin() + position);
 
         currentPosition = nearestCase;
@@ -108,6 +138,7 @@ vector<Case*> Agent::aStar(Case* position, Case* goal) {
     gScore.insert(firstGScorePair);
 
     map<Case, int> fScore;
+
     std::pair<Case, int> firstFScorePair = make_pair(*position, position->heuristicCostEstimate(*goal));
     fScore.insert(firstGScorePair);
 

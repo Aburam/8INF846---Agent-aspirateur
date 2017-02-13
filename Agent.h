@@ -8,6 +8,7 @@
 #include "Carte.h"
 #include <set>
 #include <map>
+#include <climits>
 
 class Agent {
     public :
@@ -20,8 +21,15 @@ class Agent {
         Carte& getMap();
 
         int getScore() const;
-        void addScore();
-        vector<Case*> aStar(Case* position, Case* goal);
+        void addScore(int count);
+
+        void refillBattery();
+        void reduceBattery();
+        int getBattery() const;
+        Case& getCaseBattery();
+
+
+    vector<Case*> aStar(Case* position, Case* goal);
         vector<Case*> reconstructPath(std::map<Case, Case*> cameFrom, Case* current);
         void explore();
         vector<Case*>& getPath();
@@ -32,6 +40,8 @@ private :
         Case* m_position;
         Carte& m_map;
         int m_score;
+        int m_scoreBattery;
+        Case* m_positionBattery;
         vector<Case*> m_path;
 
 };

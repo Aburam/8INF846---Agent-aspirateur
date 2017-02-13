@@ -34,9 +34,15 @@ int main() {
             agent.explore();
             cmpExploration=0;
         }
+        if(agent.getBattery()==0){
+            cout << "WARNING : Agent has no enough battery !!, end of application :(" <<  endl;
+            break;
+
+        }
 
         effecteur.move();
         cmpExploration++;
+
 
         sleep(1);
 

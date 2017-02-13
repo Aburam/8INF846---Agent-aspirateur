@@ -17,19 +17,30 @@ void Effecteur::move() {
     vector<Case*>& path = m_agent.getPath();
     Case& currentAgentCase = m_agent.getCase();
 
+
+
     if(path.size()>0) {
         Case *nextPosition = *path.begin();
 
         //if(*nextPosition == m_agent.getCase()) {
         // If next move is the same than agent position's, there is an action to do
-        if(currentAgentCase.getJewel() || currentAgentCase.getDirt()) {
+        if(currentAgentCase==m_agent.getCaseBattery() && m_agent.getBattery() < 25){
+            //The battery can be refill
+            cout << "RECHARGE DE LA BATTERIE" << endl;
+            m_agent.refillBattery();
+        }
 
+        if((currentAgentCase.getJewel() || currentAgentCase.getDirt()) && currentAgentCase.heuristicCostEstimate(m_agent.getCaseBattery())< m_agent.getBattery()-2) {
             if(currentAgentCase.getJewel()) {
                 //TODO: we take a jewel, save it in the score
                 getJewel();
+                m_agent.reduceBattery();
+                m_agent.addScore(5);
             } else {
                 //TODO: we clean dirt, save it in the score
                 aspirate();
+                m_agent.addScore(1);
+                m_agent.reduceBattery();
             }
 
             //There is no jewel and no dirt, we can leave this case
@@ -37,7 +48,10 @@ void Effecteur::move() {
                 path.erase(path.begin());
             }*/
 
-        } else {
+        }
+
+
+        else {
 
             cout << "MOVE TO (" << nextPosition->getPositionX() << ", " << nextPosition->getPositionY() << ")" << endl;
 
@@ -58,7 +72,11 @@ void Effecteur::move() {
 
 
             path.erase(path.begin());
+            m_agent.reduceBattery();
         }
+        cout << "SCORE : " << m_agent.getScore() << endl;
+        cout << "BATTERY : " << m_agent.getBattery() << endl;
+
     }
 
 
@@ -135,10 +153,15 @@ void Effecteur::getJewel(){
 
     Case& casePosition = m_agent.getCase();
     casePosition.setJewel(false);
-    casePosition.clean();
+    if(casePosition.getDirt()){
+        casePosition.clean();
+        m_agent.reduceBattery();
+    }
+
 
     int index = m_agent.getIndexPosition();
     Case& environnementCase = m_environnement.getCarte().getCase(index);
     environnementCase.setJewel(false);
-    environnementCase.clean();
+    if(environnementCase.getDirt())
+        environnementCase.clean();
 }

@@ -17,8 +17,6 @@ void Effecteur::move() {
     vector<Case*>& path = m_agent.getPath();
     Case& currentAgentCase = m_agent.getCase();
 
-
-
     if(path.size()>0) {
         Case *nextPosition = *path.begin();
 
@@ -30,7 +28,7 @@ void Effecteur::move() {
             m_agent.refillBattery();
         }
 
-        if((currentAgentCase.getJewel() || currentAgentCase.getDirt()) && currentAgentCase.heuristicCostEstimate(m_agent.getCaseBattery())< m_agent.getBattery()-2) {
+        else if((currentAgentCase.getJewel() || currentAgentCase.getDirt()) && currentAgentCase.heuristicCostEstimate(m_agent.getCaseBattery())< m_agent.getBattery()-2) {
             if(currentAgentCase.getJewel()) {
                 //TODO: we take a jewel, save it in the score
                 getJewel();
@@ -42,19 +40,10 @@ void Effecteur::move() {
                 m_agent.addScore(1);
                 m_agent.reduceBattery();
             }
-
-            //There is no jewel and no dirt, we can leave this case
-            /*if(currentAgentCase.getDirt() == false && currentAgentCase.getJewel() == false) {
-                path.erase(path.begin());
-            }*/
-
         }
-
-
         else {
 
             cout << "MOVE TO (" << nextPosition->getPositionX() << ", " << nextPosition->getPositionY() << ")" << endl;
-
 
             //------ Change position of agent in environnement
             int currentIndex = m_agent.getIndexPosition();
@@ -78,9 +67,6 @@ void Effecteur::move() {
         cout << "BATTERY : " << m_agent.getBattery() << endl;
 
     }
-
-
-
 }
 
 void Effecteur::goHere(Case* nextPosition) {

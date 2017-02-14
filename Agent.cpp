@@ -6,6 +6,8 @@
 
 Agent::Agent(Carte& map) : m_map(map), m_position(&map.getCase(0)), m_score(0), m_scoreBattery(25), m_positionBattery(&map.getCase(0)){
     m_position->addAgent();
+    m_currentBelief=AgentBelief::AGENTLOOKING;
+    m_currentDesire=AgentDesire ::CLEANEVERYTHING;
 }
 
 Agent::~Agent() {
@@ -52,6 +54,24 @@ void Agent::setMap(Carte newMap) {
     m_map = newMap;
 }
 
+void Agent::chooseDesire(){
+
+}
+
+void Agent::chooseBelief() {
+    if(m_position == m_positionBattery) {
+        m_currentBelief = AgentBelief ::AGENTRECHARGING;
+    } else if(m_position->getDirt()){
+        if(hasPickedJewel){
+            m_currentBelief = AgentBelief::AGENTCLEANING;
+        } else {
+            m_currentBelief = AgentBelief::AGENTPICKJEWEL;
+        }
+    } else if (!m_path.empty()){
+
+    }
+}
+
 void Agent::explore() {
 
     vector<Case*> totalPath;
@@ -77,7 +97,7 @@ void Agent::explore() {
         }
         vector<Case*> path;
 
-        if(currentPosition->heuristicCostEstimate(*nearestCase)+ currentPosition->heuristicCostEstimate(*m_positionBattery)> m_scoreBattery-2 || currentPosition->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
+        if(currentPosition->heuristicCostEstimate(*nearestCase)+ nearestCase->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-2 || currentPosition->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
             // recalculate the path if we need to refill the battery
             path = aStar(currentPosition, m_positionBattery);
              vector<Case*> totalPath;

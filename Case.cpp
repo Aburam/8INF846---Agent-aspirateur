@@ -2,6 +2,7 @@
 // Created by Aburam on 04/02/17.
 //
 
+#include <cmath>
 #include "Case.h"
 
 Case::Case(int x, int y) {
@@ -59,8 +60,8 @@ int Case::heuristicCostEstimate(Case goal) const {
 }
 
 int Case::getDistance(Case goal) const {
-    int diffX = abs(m_x - goal.m_x);
-    int diffY = abs(m_y - goal.m_y);
+    int diffX = std::abs(m_x - goal.m_x);
+    int diffY = std::abs(m_y - goal.m_y);
 
     return diffX + diffY;
 }

@@ -11,6 +11,7 @@ void threadFunc(Environnement &environnement){
         agent.chooseBelief();
         agent.chooseDesire();
         agent.DOITNOW();
+
         sleep(1);
 
         if(agent.getBattery()==0){
@@ -26,12 +27,10 @@ int main() {
     Environnement environnement = Environnement();
     Carte &agentMap = environnement.getCarte();
     Carte &carte = environnement.getCarte();
-
-    std::thread thread1(threadFunc,std::ref(environnement));
-    thread1.detach();
-
+    bool threadLaunched = false;
 
     while(environnement.gameIsRunning()){
+
         cout << "Nouveau calcul : " << endl;
 
         if (environnement.shouldThereBeANewDirtySpace()){
@@ -43,6 +42,12 @@ int main() {
         cout << carte << endl;
 
         sleep(1);
+
+        if(!threadLaunched){
+            std::thread thread1(threadFunc,std::ref(environnement));
+            thread1.detach();
+            threadLaunched=true;
+        }
 
     }
     return 0;

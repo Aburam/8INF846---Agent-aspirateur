@@ -5,8 +5,11 @@
 #ifndef INC_8INF846_TP1_EFFECTEUR_H
 #define INC_8INF846_TP1_EFFECTEUR_H
 
-#include "Agent.h"
-#include "Environnement.h"
+
+
+class Environnement;
+class Agent;
+class Case;
 
 class Effecteur {
     public:
@@ -21,13 +24,9 @@ class Effecteur {
         void aspirate();
         void getJewel();
 
-
 private:
         Agent & m_agent;
         Environnement & m_environnement;
-
-
-
 };
 
 

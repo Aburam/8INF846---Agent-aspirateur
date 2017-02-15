@@ -3,6 +3,8 @@
 //
 
 #include "Effecteur.h"
+#include "Environnement.h"
+#include "Agent.h"
 
 Effecteur::Effecteur(Agent & agent, Environnement & environnement): m_agent(agent), m_environnement(environnement) {
 }
@@ -22,7 +24,8 @@ void Effecteur::move() {
 
         //if(*nextPosition == m_agent.getCase()) {
         // If next move is the same than agent position's, there is an action to do
-        if(currentAgentCase==m_agent.getCaseBattery() && m_agent.getBattery() < 25){
+        if(currentAgentCase==m_agent.getCaseBattery() && m_agent.getBattery() < 25
+           && *m_agent.getDestination()== m_agent.getCaseBattery()){
             //The battery can be refill
             cout << "RECHARGE DE LA BATTERIE" << endl;
             m_agent.refillBattery();

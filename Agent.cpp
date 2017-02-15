@@ -4,10 +4,13 @@
 
 #include "Agent.h"
 
-Agent::Agent(Carte& map) : m_map(map), m_position(&map.getCase(0)), m_score(0), m_scoreBattery(25), m_positionBattery(&map.getCase(0)){
+Agent::Agent(Carte& map,Environnement& e) : m_map(map), m_position(&map.getCase(0)), m_score(0),
+                                           m_scoreBattery(25), m_positionBattery(&map.getCase(0)),
+                                           m_effecteur(*this,e){
     m_position->addAgent();
-    m_currentBelief=AgentBelief::AGENTLOOKING;
     m_currentDesire=AgentDesire ::CLEANEVERYTHING;
+    m_destination = nullptr;
+
 }
 
 Agent::~Agent() {
@@ -54,23 +57,88 @@ void Agent::setMap(Carte newMap) {
     m_map = newMap;
 }
 
-void Agent::chooseDesire(){
+void Agent::observe(){
+    if(m_destination == nullptr) {
+        vector<Case *> totalPath;
+        vector<Case *> casesNotEmpty = m_map.getCasesNotEmpty();
+        Case *currentPosition = m_position;
 
+        //Find the nearest case not empty
+        Case *nearestCase = currentPosition;
+        int minDistance = INT_MAX;
+
+        for (Case *currentCase : casesNotEmpty) {
+            int distance = currentPosition->getDistance(*currentCase);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestCase = currentCase;
+            }
+        }
+
+        m_destination = nearestCase;
+        cout << *m_destination << endl;
+    }
+}
+
+void Agent::chooseDesire(){
+    if(m_currentBelief == AgentBelief::AGENTNEEDSRECHARGE)
+        m_currentDesire = AgentDesire::GORECHARGE;
+    else if (m_currentDesire != AgentDesire::CLEANEVERYTHING)
+        m_currentDesire=AgentDesire::CLEANEVERYTHING;
 }
 
 void Agent::chooseBelief() {
-    if(m_position == m_positionBattery) {
+    if(m_position == m_positionBattery && m_destination == m_positionBattery && m_scoreBattery<25) {
         m_currentBelief = AgentBelief ::AGENTRECHARGING;
-    } else if(m_position->getDirt()){
-        if(hasPickedJewel){
+    } else if(m_position->heuristicCostEstimate(*m_destination)+ m_destination->heuristicCostEstimate(*m_positionBattery)
+              >= m_scoreBattery-2 || m_position->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
+        m_currentBelief = AgentBelief::AGENTNEEDSRECHARGE;
+        m_destination = m_positionBattery;
+    } else if(m_position->getDirt() &&  m_position==m_destination){
             m_currentBelief = AgentBelief::AGENTCLEANING;
-        } else {
-            m_currentBelief = AgentBelief::AGENTPICKJEWEL;
-        }
-    } else if (!m_path.empty()){
-
+            m_destination = nullptr;
+    } else if(m_position->getJewel() &&  m_position==m_destination){
+        m_currentBelief = AgentBelief::AGENTPICKJEWEL;
+        m_destination = nullptr;
+    } else {
+        m_currentBelief = AgentBelief::AGENTMOVING;
     }
 }
+
+void Agent::DOITNOW(){
+
+    if(m_path.empty() && m_currentBelief == AgentBelief::AGENTMOVING)
+        m_path=aStar(m_position,m_destination);
+
+    switch(m_currentBelief){
+        case AgentBelief::AGENTMOVING :
+            m_effecteur.move();
+            break;
+        case AgentBelief::AGENTPICKJEWEL:
+            m_effecteur.getJewel();
+            reduceBattery();
+            addScore(5);
+            m_destination = nullptr;
+            break;
+        case AgentBelief::AGENTNEEDSRECHARGE:
+            if(m_path.empty())
+                m_path=aStar(m_position,m_positionBattery);
+            m_effecteur.move();
+            break;
+        case AgentBelief::AGENTRECHARGING:
+            cout << "RECHARGE DE LA BATTERIE" << endl;
+            refillBattery();
+            m_destination = nullptr;
+            break;
+        case AgentBelief::AGENTCLEANING :
+            m_effecteur.aspirate();
+            addScore(1);
+            reduceBattery();
+            m_destination = nullptr;
+            break;
+    }
+}
+
 
 void Agent::explore() {
 
@@ -100,15 +168,12 @@ void Agent::explore() {
         if(currentPosition->heuristicCostEstimate(*nearestCase)+ nearestCase->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-2 || currentPosition->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
             // recalculate the path if we need to refill the battery
             path = aStar(currentPosition, m_positionBattery);
-             vector<Case*> totalPath;
-             totalPath.insert(totalPath.end(), path.begin(), path.end());
-             m_path = totalPath;
-
-
+            vector<Case*> totalPath;
+            totalPath.insert(totalPath.end(), path.begin(), path.end());
+            m_path = totalPath;
         }
         else{
             //Compute path between agent and nearest "not empty case"
-
             path = aStar(currentPosition, nearestCase);
         }
 
@@ -116,9 +181,7 @@ void Agent::explore() {
         totalPath.insert(totalPath.end(), path.begin(), path.end());
 
         //Erase the current case
-
         casesNotEmpty.erase(casesNotEmpty.begin() + position);
-
         currentPosition = nearestCase;
 
     }
@@ -246,6 +309,10 @@ vector<Case*>& Agent::getPath() {
 
 int Agent::getIndexPosition() {
     return m_map.findIndex(*m_position);
+}
+
+Case *Agent::getDestination() const {
+    return m_destination;
 }
 
 

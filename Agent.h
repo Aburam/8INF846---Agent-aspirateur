@@ -6,6 +6,8 @@
 #define INC_8INF846_TP1_AGENT_H
 
 #include "Carte.h"
+#include "Effecteur.h"
+#include "Environnement.h"
 #include <set>
 #include <map>
 #include <climits>
@@ -13,12 +15,9 @@
 enum AgentBelief{
     AGENTRECHARGING,            // Agent recharges his energy
     AGENTNEEDSRECHARGE,         // Agent needs to recharge
-    AGENTCLEANALLWITHOUTJEWELS, // Wants to clean everything while picking up jewels
-    AGENTLOOKING,               // Looks for jewel in dirt
     AGENTCLEANING,              // Cleans dirt
     AGENTPICKJEWEL,             // Agent picks jewel
     AGENTMOVING,                // Move to next dirty case
-    AGENTSEARCHING              // Searches for dirty case
 };
 
 enum AgentDesire{
@@ -28,7 +27,7 @@ enum AgentDesire{
 
 class Agent {
     public :
-        Agent(Carte& map);
+        Agent(Carte& map,Environnement& e);
         ~Agent();
 
         Case& getCase();
@@ -43,19 +42,23 @@ class Agent {
         void reduceBattery();
         int getBattery() const;
         Case& getCaseBattery();
+        Case *getDestination() const;
 
-
-        vector<Case*> aStar(Case* position, Case* goal);
+    vector<Case*> aStar(Case* position, Case* goal);
         vector<Case*> reconstructPath(std::map<Case, Case*> cameFrom, Case* current);
         void explore();
         vector<Case*>& getPath();
         void setMap(Carte newMap);
         int getIndexPosition();
+
         void chooseDesire();
         void chooseBelief();
+        void observe();
+        void DOITNOW();
 
     private :
         Case* m_position;
+        Case* m_destination;
         Carte& m_map;
         int m_score;
         int m_scoreBattery;
@@ -63,9 +66,7 @@ class Agent {
         vector<Case*> m_path;
         AgentDesire m_currentDesire;
         AgentBelief m_currentBelief;
-        int m_energy;
-        bool hasPickedJewel;
-
+        Effecteur m_effecteur;
 };
 
 

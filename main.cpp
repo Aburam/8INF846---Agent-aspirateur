@@ -1,18 +1,16 @@
 #include <iostream>
 #include "Environnement.h"
 #include "Agent.h"
-#include "Effecteur.h"
 #include <unistd.h>
 
 
 int main() {
     Environnement environnement = Environnement();
-    Carte agentMap = environnement.getCarte();
+    Carte &agentMap = environnement.getCarte();
     Carte &carte = environnement.getCarte();
 
     // TEST de l'algo d'exploration A*
-    Agent agent = Agent(agentMap);
-    Effecteur effecteur = Effecteur(agent, environnement);
+    Agent agent = Agent(agentMap,environnement);
 
     int cmpExploration = 0;
 
@@ -27,11 +25,15 @@ int main() {
         }
         cout << carte << endl;
 
+        agent.observe();
+        agent.chooseBelief();
+        agent.chooseDesire();
+        agent.DOITNOW();
+
 
         // Find path to collect all jewel and clean all dirt
         if(cmpExploration > 2) {
             agent.setMap(environnement.getCarte());
-            agent.explore();
             cmpExploration=0;
         }
         if(agent.getBattery()==0){
@@ -40,8 +42,8 @@ int main() {
 
         }
 
-        effecteur.move();
-        cmpExploration++;
+//        agent.getEffecteur().move();
+//        cmpExploration++;
 
 
         sleep(1);

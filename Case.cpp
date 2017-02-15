@@ -65,11 +65,3 @@ int Case::getDistance(Case goal) const {
 
     return diffX + diffY;
 }
-
-void Case::takeJewel() {
-    m_jewel = false;
-}
-
-void Case::cleanDirt() {
-    m_dirt = false;
-}

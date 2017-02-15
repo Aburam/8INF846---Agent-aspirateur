@@ -30,10 +30,6 @@ class Case {
     int getPositionY() const;
     int heuristicCostEstimate(Case goal) const;
     int getDistance(Case goal) const;
-    void takeJewel();
-    void cleanDirt();
-
-
 
 
     friend ostream& operator<<(ostream& os, Case& c);

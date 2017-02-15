@@ -16,14 +16,6 @@ Carte::Carte(int sizeX, int sizeY) {
 
 
 Carte::Carte(const Carte &carte) {
-    //cout <<"copy constructor" << endl;
-
-    /*for(int i=0; i<m_sizeX * m_sizeY; ++i) {
-        Case& newCase = newCarte.m_cases.at(i);
-        Case& oldCase = m_cases.at(i);
-
-        newCase = oldCase;
-    }*/
 
     m_sizeX = carte.m_sizeX;
     m_sizeY = carte.m_sizeY;
@@ -32,7 +24,6 @@ Carte::Carte(const Carte &carte) {
             unsigned index = positionX*m_sizeX+positionY;
             Case oldCase = carte.m_cases.at(index);
             m_cases.push_back(oldCase);
-            //cout << "old value: " << &carte.m_cases.at(index) << " new value: " << &m_cases.at(index);
         }
     }
 
@@ -41,10 +32,6 @@ Carte::Carte(const Carte &carte) {
 
 Carte::~Carte() {
 
-}
-
-int Carte::getSize() const{
-    return m_sizeX*m_sizeY;
 }
 
 int Carte::getSizeX() const{

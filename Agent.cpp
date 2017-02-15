@@ -53,10 +53,6 @@ int Agent::getBattery() const {
     return m_scoreBattery;
 }
 
-void Agent::setMap(Carte newMap) {
-    m_map = newMap;
-}
-
 void Agent::observe(){
     if(m_destination == nullptr) {
         vector<Case *> totalPath;
@@ -137,56 +133,6 @@ void Agent::DOITNOW(){
             m_destination = nullptr;
             break;
     }
-}
-
-
-void Agent::explore() {
-
-    vector<Case*> totalPath;
-    vector<Case*> casesNotEmpty = m_map.getCasesNotEmpty();
-    Case* currentPosition = m_position;
-
-    while(!casesNotEmpty.empty()) {
-
-        //Find the nearest case not empty
-        Case* nearestCase = currentPosition;
-        int minDistance = INT_MAX;
-        int position = -1; //used to erase case after finding the path
-        int cmp = 0;
-
-        for(Case *currentCase : casesNotEmpty) {
-            int distance = currentPosition->getDistance(*currentCase);
-            if(distance < minDistance) {
-                minDistance = distance;
-                nearestCase = currentCase;
-                position = cmp;
-            }
-            cmp++;
-        }
-        vector<Case*> path;
-
-        if(currentPosition->heuristicCostEstimate(*nearestCase)+ nearestCase->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-2 || currentPosition->heuristicCostEstimate(*m_positionBattery)>= m_scoreBattery-1){
-            // recalculate the path if we need to refill the battery
-            path = aStar(currentPosition, m_positionBattery);
-            vector<Case*> totalPath;
-            totalPath.insert(totalPath.end(), path.begin(), path.end());
-            m_path = totalPath;
-        }
-        else{
-            //Compute path between agent and nearest "not empty case"
-            path = aStar(currentPosition, nearestCase);
-        }
-
-        //Add the path to the total path
-        totalPath.insert(totalPath.end(), path.begin(), path.end());
-
-        //Erase the current case
-        casesNotEmpty.erase(casesNotEmpty.begin() + position);
-        currentPosition = nearestCase;
-
-    }
-
-    m_path = totalPath;
 }
 
 vector<Case*> Agent::reconstructPath(std::map<Case, Case*> cameFrom, Case* current) {

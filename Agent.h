@@ -46,9 +46,7 @@ class Agent {
 
     vector<Case*> aStar(Case* position, Case* goal);
         vector<Case*> reconstructPath(std::map<Case, Case*> cameFrom, Case* current);
-        void explore();
         vector<Case*>& getPath();
-        void setMap(Carte newMap);
         int getIndexPosition();
 
         void chooseDesire();
